@@ -20,11 +20,16 @@
   font-style: normal;
 }
 
+.filter{
+  width: 200px;
+}
+
 
 .arabic {
-  color: red;
-  font-family: 'Uthmanic', 'serif';
+  /* font-family: 'Uthmanic', 'serif'; */
   font-display: optional;
+  font-size: larger;
+  text-align: right;
 }
  @font-face {
   font-family: 'QPC Symbols';

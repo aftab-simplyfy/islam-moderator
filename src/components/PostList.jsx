@@ -9,6 +9,7 @@ function PostList(props) {
     const [filter, setFilter] = useState("un-verified")
     const [postData, setPostData] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [showTranslation, setShowTranslation] = useState(false)
     const {book_id} = useParams();
     const {state} = useLocation();
     const BASE_URL = config["baseUrl"]
@@ -153,10 +154,30 @@ function PostList(props) {
         
     <div className="card-body mt-2">
         <div className="headings d-flex sticky-top justify-content-between">
-            <p className="card-title mb-0 h4">Available Posts for {state && state.book.en_name}  </p>
-            
-            <p className='card-title mb-0 h4'>
-                Filter : <select className='form-select' onChange={(e)=>{
+            <p className="card-title mb-0 h4">{state && state.book.en_name}  </p>      
+           
+        </div>
+        <div className="filters d-flex mt-3">
+        <p className='card-title mb-0 mr-2 h4'>
+                <p className='ml-2'> Translation</p>
+                <select className='form-select  text-center filter' onChange={(e)=>{
+                  
+                    let language = e.target.value
+                    if (language == 1) {
+                        setShowTranslation(true)
+                    }else{
+                        setShowTranslation(false)
+                    }
+                
+                  
+                }} name="status" id="status">
+                <option value="" >off</option>
+                <option value="1">English</option>
+                </select>
+        </p> 
+        <p className='card-title mx-2 mb-0 h4'>
+                <p className='ml-2'> Status</p>
+                <select className='form-select text-center filter' onChange={(e)=>{
                   
                     setFilter(e.target.value)
                     setPostData([])
@@ -166,22 +187,21 @@ function PostList(props) {
                 
                   
                 }} name="status" id="status">
+                <option selected disabled value="">-- Select --</option>
                 <option value="un-verified">Un-Verified</option>
                 <option value="verified">Verified</option>
                 <option value="both">Both</option>
                 </select>
-            </p> 
-        
-           
+        </p> 
         </div>
         <div className="table-responsive mt-3">
             <table className="table table-striped table-borderless">
                 <thead>
                 <tr>
-                    <th>Post Id</th>
-                    <th>Content</th>
-                    <th>Content 2</th>
-                    <th>Verified</th>
+                    <th className='col-md-2'>Source</th>
+                    <th className='col-md-8'>Text</th>
+                    {/* <th>Content 2</th> */}
+                    <th className='col-md-2'>Verified</th>
                     {/* <th>Action</th> */}
                 </tr>
                 </thead>
@@ -191,10 +211,14 @@ function PostList(props) {
                                 postData && postData.map((post, index)=>{
                                     let isChecked = post.is_verified
                                     return <tr key={index}>
-                                    <td>{post.id}</td>
-                                    <td><p className=' text-wrap'>{post.en_content}</p></td>                        
-                                    <td><p className=' text-wrap arabic'>{post.ar_content}</p></td>                        
-                                    <td> <input style={{width: "30px", height: "30px", backgroundColor: 'red'}} type="checkbox" onChange={()=> {handleCheckboxChange(post)}} checked={isChecked} id={post.id} />
+                                    <td>{post.source}</td>
+                                    <td className='pr-5'>
+                                        <p className='text-wrap my-2 arabic'>{post.ar_content}</p>
+                                        {showTranslation && <p className='text-wrap my-2'>{post.en_content}</p>}
+                                    
+                                    </td>                        
+                                    {/* <td><p className=' text-wrap arabic'>{post.ar_content}</p></td>                         */}
+                                    <td className=''> <input style={{width: "30px", height: "30px", backgroundColor: 'red'}} type="checkbox" onChange={()=> {handleCheckboxChange(post)}} checked={isChecked} id={post.id} />
                                         </td>                        
                                                     
                                     {/* <td> {post.is_verified ? <button disabled className='btn btn-primary btn-icon-text'>Verified</button> : <button className='btn btn-primary btn-icon-text' onClick={()=>{submitContent(post, status)}}>Sumbit</button>}</td> */}
